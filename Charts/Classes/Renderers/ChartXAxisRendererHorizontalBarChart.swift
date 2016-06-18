@@ -28,7 +28,7 @@ public class ChartXAxisRendererHorizontalBarChart: ChartXAxisRendererBarChart
     
     public override func computeAxis(xValAverageLength xValAverageLength: Double, xValues: [String?])
     {
-        guard let xAxis = xAxis else { return }
+        guard let xAxis = _xAxis else { return }
         
         xAxis.values = xValues
        
@@ -49,7 +49,7 @@ public class ChartXAxisRendererHorizontalBarChart: ChartXAxisRendererBarChart
 
     public override func renderAxisLabels(context context: CGContext)
     {
-        guard let xAxis = xAxis else { return }
+        guard let xAxis = _xAxis else { return }
         
         if !xAxis.isEnabled || !xAxis.isDrawLabelsEnabled || chart?.data === nil
         {
@@ -85,7 +85,7 @@ public class ChartXAxisRendererHorizontalBarChart: ChartXAxisRendererBarChart
     public override func drawLabels(context context: CGContext, pos: CGFloat, anchor: CGPoint)
     {
         guard let
-            xAxis = xAxis,
+            xAxis = _xAxis,
             bd = chart?.data as? BarChartData
             else { return }
         
@@ -127,7 +127,7 @@ public class ChartXAxisRendererHorizontalBarChart: ChartXAxisRendererBarChart
     
     public func drawLabel(context context: CGContext, label: String, xIndex: Int, x: CGFloat, y: CGFloat, attributes: [String: NSObject], anchor: CGPoint, angleRadians: CGFloat)
     {
-        guard let xAxis = xAxis else { return }
+        guard let xAxis = _xAxis else { return }
         
         let formattedLabel = xAxis.valueFormatter?.stringForXValue(xIndex, original: label, viewPortHandler: viewPortHandler) ?? label
         ChartUtils.drawText(context: context, text: formattedLabel, point: CGPoint(x: x, y: y), attributes: attributes, anchor: anchor, angleRadians: angleRadians)
@@ -138,7 +138,7 @@ public class ChartXAxisRendererHorizontalBarChart: ChartXAxisRendererBarChart
     public override func renderGridLines(context context: CGContext)
     {
         guard let
-            xAxis = xAxis,
+            xAxis = _xAxis,
             bd = chart?.data as? BarChartData
             else { return }
         
@@ -192,7 +192,7 @@ public class ChartXAxisRendererHorizontalBarChart: ChartXAxisRendererBarChart
     
     public override func renderAxisLine(context context: CGContext)
     {
-        guard let xAxis = xAxis else { return }
+        guard let xAxis = _xAxis else { return }
         
         if (!xAxis.isEnabled || !xAxis.isDrawAxisLineEnabled)
         {
@@ -241,7 +241,7 @@ public class ChartXAxisRendererHorizontalBarChart: ChartXAxisRendererBarChart
     
     public override func renderLimitLines(context context: CGContext)
     {
-        guard let xAxis = xAxis else { return }
+        guard let xAxis = _xAxis else { return }
         
         var limitLines = xAxis.limitLines
         

@@ -34,7 +34,7 @@ public class ChartXAxisRendererBarChart: ChartXAxisRenderer
     public override func drawLabels(context context: CGContext, pos: CGFloat, anchor: CGPoint)
     {
         guard let
-            xAxis = xAxis,
+            xAxis = _xAxis,
             barData = chart?.data as? BarChartData
             else { return }
         
@@ -113,7 +113,7 @@ public class ChartXAxisRendererBarChart: ChartXAxisRenderer
     public override func renderGridLines(context context: CGContext)
     {
         guard let
-            xAxis = xAxis,
+            xAxis = _xAxis,
             barData = chart?.data as? BarChartData
             else { return }
         
@@ -162,4 +162,55 @@ public class ChartXAxisRendererBarChart: ChartXAxisRenderer
         
         CGContextRestoreGState(context)
     }
+  
+  /// MAARK
+  public override func renderGridAreas(context context: CGContext)
+  {
+    
+    // New isDrawGridAreasEnabled property parallels isDrawGridLinesEnableld
+    
+    // xAxis.filledAreas is an array of ChartXAxisAreaData instances, a new class
+    // which has startX and endY properties
+    
+    if (!_xAxis.isDrawGridAreasEnabled || !_xAxis.isEnabled || _xAxis.filledAreas.count == 0)
+    {
+      return
+    }
+    
+    guard let chart = chart else { return }
+    
+    let barData = chart.data as! BarChartData
+    
+    let step = barData.dataSetCount
+    
+    CGContextSaveGState(context)
+    
+    var position = CGPoint(x: 0.0, y: 0.0)
+    var endPosition = CGPoint(x: 0.0, y: 0.0)
+    let valueToPixelMatrix = transformer.valueToPixelMatrix
+    
+    // Iterate through filled areas
+    let c = _xAxis.filledAreas.count
+    for (var i=0; i < c; i += 1) {
+      let areaData = _xAxis.filledAreas[i];
+      // Get start position, using the same logic as used in rendering gridlines
+      let sx = Int(areaData.startX)
+      position.x = CGFloat(sx * step) + CGFloat(sx) * barData.groupSpace - 0.5
+      position = CGPointApplyAffineTransform(position, valueToPixelMatrix)
+      // Get end position
+      let ex = Int(areaData.endX)
+      endPosition.x = CGFloat(ex * step) + CGFloat(ex) * barData.groupSpace - 0.5
+      endPosition = CGPointApplyAffineTransform(endPosition, valueToPixelMatrix)
+      // Draw rectangle
+      let rectangle = CGRect(x: position.x, y: viewPortHandler.contentTop, width: CGFloat(endPosition.x-position.x), height: viewPortHandler.contentBottom)
+      let color = areaData.color;
+      CGContextSetFillColorWithColor(context, color.CGColor)
+      CGContextSetStrokeColorWithColor(context, color.CGColor)
+      CGContextSetLineWidth(context, 1)
+      CGContextAddRect(context, rectangle)
+      CGContextDrawPath(context, .FillStroke)
+    }
+    
+    CGContextRestoreGState(context)
+  }
 }

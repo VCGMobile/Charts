@@ -33,7 +33,7 @@ public class ChartXAxisRendererRadarChart: ChartXAxisRenderer
     public override func renderAxisLabels(context context: CGContext)
     {
         guard let
-            xAxis = xAxis,
+            xAxis = _xAxis,
             chart = chart
             else { return }
         
@@ -74,7 +74,7 @@ public class ChartXAxisRendererRadarChart: ChartXAxisRenderer
     
     public func drawLabel(context context: CGContext, label: String, xIndex: Int, x: CGFloat, y: CGFloat, attributes: [String: NSObject], anchor: CGPoint, angleRadians: CGFloat)
     {
-        guard let xAxis = xAxis else { return }
+        guard let xAxis = _xAxis else { return }
         
         let formattedLabel = xAxis.valueFormatter?.stringForXValue(xIndex, original: label, viewPortHandler: viewPortHandler) ?? label
         ChartUtils.drawText(context: context, text: formattedLabel, point: CGPoint(x: x, y: y), attributes: attributes, anchor: anchor, angleRadians: angleRadians)
