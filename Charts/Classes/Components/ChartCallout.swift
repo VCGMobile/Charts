@@ -24,7 +24,7 @@ public class ChartCallout: NSObject {
     {
     get
     {
-      return image!.size
+      return image?.size ?? CGSizeZero
     }
   }
   
