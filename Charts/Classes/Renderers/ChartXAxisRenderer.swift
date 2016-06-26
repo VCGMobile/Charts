@@ -332,7 +332,7 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
     
     CGContextSaveGState(context)
     
-    var position = CGPoint(x: 0.0, y: 0.0)
+    var position = CGPoint(x: 0.0, y: xAxis.filledAreaTopOffset)
     var endPosition = CGPoint(x: 0.0, y: 0.0)
     let valueToPixelMatrix = transformer.valueToPixelMatrix
     

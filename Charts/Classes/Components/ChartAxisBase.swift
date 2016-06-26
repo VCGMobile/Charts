@@ -37,6 +37,7 @@ public class ChartAxisBase: ChartComponentBase
   
   /// MAARK
   public var drawGridAreasEnabled = true
+  public var filledAreaTopOffset: CGFloat = 0
   
   /// flag that indicates of the labels of this axis should be drawn or not
   public var drawLabelsEnabled = true
