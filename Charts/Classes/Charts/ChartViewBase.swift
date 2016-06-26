@@ -132,7 +132,7 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
     public var drawCallout = true
   
     /// the view that represents the callout
-    public var callout: ChartCallout?
+    public var callouts: [ChartCallout]?
   
     private var _interceptTouchEvents = false
     
@@ -536,25 +536,27 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
 
     internal func drawCallouts(context context: CGContext)
     {
-        if (callout == nil || !drawCallout)
+        if (callouts == nil || !drawCallout)
         {
             return
         }
       
       
-      let calloutSize = callout!.size
+      for callout in callouts! {
+        let calloutSize = callout.size
       
-      let pos = callout!.position
+        let pos = callout.position
       
       
-      if (pos.y - calloutSize.height <= 0.0)
-      {
-          let y = calloutSize.height - pos.y
-          callout!.draw(context: context, point: CGPoint(x: pos.x, y: pos.y + y))
-      }
-      else
-      {
-          callout!.draw(context: context, point: pos)
+        if (pos.y - calloutSize.height <= 0.0)
+        {
+            let y = calloutSize.height - pos.y
+            callout.draw(context: context, point: CGPoint(x: pos.x, y: pos.y + y))
+        }
+        else
+        {
+            callout.draw(context: context, point: pos)
+        }
       }
  
     }
