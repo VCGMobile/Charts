@@ -332,7 +332,7 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
     
     CGContextSaveGState(context)
     
-    var position = CGPoint(x: 0.0, y: xAxis.filledAreaTopOffset)
+    var position = CGPoint(x: 0.0, y: 0.0)
     var endPosition = CGPoint(x: 0.0, y: 0.0)
     let valueToPixelMatrix = transformer.valueToPixelMatrix
     
@@ -345,8 +345,8 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
       endPosition.x = CGFloat(areaData.endX)
       endPosition = CGPointApplyAffineTransform(endPosition, valueToPixelMatrix)
       // Draw rectangle
-      let rectangle = CGRect(x: position.x, y: viewPortHandler.contentTop + xAxis.filledAreaTopOffset, width: CGFloat(endPosition.x-position.x), height: viewPortHandler.contentBottom - xAxis.filledAreaTopOffset)
-      let color = UIColor.cyanColor() //areaData.color;
+      let rectangle = CGRect(x: position.x, y: viewPortHandler.contentTop, width: CGFloat(endPosition.x-position.x), height: viewPortHandler.contentBottom)
+      let color = areaData.color;
       CGContextSetFillColorWithColor(context, color.CGColor)
       CGContextSetStrokeColorWithColor(context, color.CGColor)
       CGContextSetLineWidth(context, 1)

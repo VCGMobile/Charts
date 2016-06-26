@@ -194,6 +194,7 @@ public class ChartXAxisRendererBarChart: ChartXAxisRenderer
       // Get start position, using the same logic as used in rendering gridlines
       let sx = Int(areaData.startX)
       position.x = CGFloat(sx * step) + CGFloat(sx) * barData.groupSpace - 0.5
+      position.y = 40
       position = CGPointApplyAffineTransform(position, valueToPixelMatrix)
       // Get end position
       let ex = Int(areaData.endX)
