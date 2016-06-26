@@ -45,6 +45,10 @@ public class ChartCallout: NSObject {
   /// Draws the Callout on the given position on the given context
   public func draw(context context: CGContext, point: CGPoint)
   {
+    if image == nil {
+        return
+    }
+    
     let offset = self.offsetForDrawingAtPos(point)
     let size = self.size
     
