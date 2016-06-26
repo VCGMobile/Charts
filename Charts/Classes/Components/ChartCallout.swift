@@ -13,6 +13,9 @@ public class ChartCallout: NSObject {
   /// The callout image to render
   public var image: NSUIImage?
   
+  /// The callout tag
+  public var tag: Int = 0
+  
   /// Use this to set the desired point on the chart canvas
   public var position: CGPoint = CGPoint()
   
@@ -27,6 +30,9 @@ public class ChartCallout: NSObject {
       return image?.size ?? CGSizeZero
     }
   }
+  
+  /// The rect of the callout
+  public var rect: CGRect!
   
   public override init()
   {
@@ -45,14 +51,15 @@ public class ChartCallout: NSObject {
   /// Draws the Callout on the given position on the given context
   public func draw(context context: CGContext, point: CGPoint)
   {
-    if image == nil {
+    if image == nil
+    {
         return
     }
     
     let offset = self.offsetForDrawingAtPos(point)
     let size = self.size
     
-    let rect = CGRect(x: point.x + offset.x, y: point.y + offset.y, width: size.width, height: size.height)
+    rect = CGRect(x: point.x + offset.x, y: point.y + offset.y, width: size.width, height: size.height)
     
     NSUIGraphicsPushContext(context)
     image!.drawInRect(rect)

@@ -36,6 +36,9 @@ public protocol ChartViewDelegate
     
     // Callbacks when the chart is moved / translated via drag gesture.
     optional func chartTranslated(chartView: ChartViewBase, dX: CGFloat, dY: CGFloat)
+  
+    // Callbacks when the chart is moved / translated via drag gesture.
+    optional func chartCalloutTapped(chartView: ChartViewBase, callout: ChartCallout)
 }
 
 public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
@@ -542,12 +545,12 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
         }
       
       
-      for callout in callouts! {
+      for callout in callouts!
+      {
         let calloutSize = callout.size
       
         let pos = callout.position
-      
-      
+ 
         if (pos.y - calloutSize.height <= 0.0)
         {
             let y = calloutSize.height - pos.y
@@ -560,7 +563,7 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
       }
  
     }
-  
+
     // MARK: - Markers
 
     /// draws all MarkerViews on the highlighted positions

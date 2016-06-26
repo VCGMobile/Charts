@@ -603,7 +603,23 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         if (recognizer.state == NSUIGestureRecognizerState.Ended)
         {
             if !self.isHighLightPerTapEnabled { return }
-            
+          
+            if callouts != nil {
+              let point = recognizer.locationInView(self)
+              
+              for callout in callouts!
+              {
+                  if CGRectContainsPoint(callout.rect, point)
+                  {
+                      if (delegate !== nil)
+                      {
+                        delegate?.chartCalloutTapped?(self, callout: callout)
+                        return
+                      }
+                  }
+              }
+            }
+          
             let h = getHighlightByTouchPoint(recognizer.locationInView(self))
             
             if (h === nil || h!.isEqual(self.lastHighlighted))
