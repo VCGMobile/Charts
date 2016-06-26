@@ -127,7 +127,13 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
     
     /// the view that represents the marker
     public var marker: ChartMarker?
-    
+  
+    /// if set to true, the marker is drawn
+    public var drawCallout = true
+  
+    /// the view that represents the callout
+    public var callout: ChartCallout?
+  
     private var _interceptTouchEvents = false
     
     /// An extra offset to be appended to the viewport's top
@@ -525,6 +531,33 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
     
     /// The last value that was highlighted via touch.
     public var lastHighlighted: ChartHighlight?
+  
+    // MARK: - Callouts
+
+    internal func drawCallouts(context context: CGContext)
+    {
+        if (callout == nil || !drawCallout)
+        {
+            return
+        }
+      
+      
+      let calloutSize = callout!.size
+      
+      let pos = callout!.position
+      
+      
+      if (pos.y - calloutSize.height <= 0.0)
+      {
+          let y = calloutSize.height - pos.y
+          callout!.draw(context: context, point: CGPoint(x: pos.x, y: pos.y + y))
+      }
+      else
+      {
+          callout!.draw(context: context, point: pos)
+      }
+ 
+    }
   
     // MARK: - Markers
 
