@@ -346,7 +346,7 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
       endPosition = CGPointApplyAffineTransform(endPosition, valueToPixelMatrix)
       // Draw rectangle
       let rectangle = CGRect(x: position.x, y: viewPortHandler.contentTop + xAxis.filledAreaTopOffset, width: CGFloat(endPosition.x-position.x), height: viewPortHandler.contentBottom - xAxis.filledAreaTopOffset)
-      let color = areaData.color;
+      let color = UIColor.cyanColor() //areaData.color;
       CGContextSetFillColorWithColor(context, color.CGColor)
       CGContextSetStrokeColorWithColor(context, color.CGColor)
       CGContextSetLineWidth(context, 1)
