@@ -337,9 +337,7 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
     let valueToPixelMatrix = transformer.valueToPixelMatrix
     
     // Iterate through filled areas
-    let c = _xAxis.filledAreas.count
-    for (var i=0; i < c; i += 1) {
-      let areaData = _xAxis.filledAreas[i];
+    for areaData in xAxis.filledAreas {
       // Get start position
       position.x = CGFloat(areaData.startX)
       position = CGPointApplyAffineTransform(position, valueToPixelMatrix)
@@ -347,7 +345,7 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
       endPosition.x = CGFloat(areaData.endX)
       endPosition = CGPointApplyAffineTransform(endPosition, valueToPixelMatrix)
       // Draw rectangle
-      let rectangle = CGRect(x: position.x, y: viewPortHandler.contentTop, width: CGFloat(endPosition.x-position.x), height: viewPortHandler.contentBottom)
+      let rectangle = CGRect(x: position.x, y: viewPortHandler.contentTop + xAxis.filledAreaTopOffset, width: CGFloat(endPosition.x-position.x), height: viewPortHandler.contentBottom - xAxis.filledAreaTopOffset)
       let color = areaData.color;
       CGContextSetFillColorWithColor(context, color.CGColor)
       CGContextSetStrokeColorWithColor(context, color.CGColor)

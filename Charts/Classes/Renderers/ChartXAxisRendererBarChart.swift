@@ -190,9 +190,7 @@ public class ChartXAxisRendererBarChart: ChartXAxisRenderer
     let valueToPixelMatrix = transformer.valueToPixelMatrix
     
     // Iterate through filled areas
-    let c = _xAxis.filledAreas.count
-    for (var i=0; i < c; i += 1) {
-      let areaData = _xAxis.filledAreas[i];
+    for areaData in _xAxis.filledAreas {
       // Get start position, using the same logic as used in rendering gridlines
       let sx = Int(areaData.startX)
       position.x = CGFloat(sx * step) + CGFloat(sx) * barData.groupSpace - 0.5
