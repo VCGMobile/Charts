@@ -18,6 +18,14 @@ public class ChartCallout: NSObject {
   
   /// Use this to set the desired point on the chart canvas
   public var position: CGPoint = CGPoint()
+  {
+    didSet
+    {
+      currentPosition = position
+    }
+  }
+  
+  public var currentPosition: CGPoint = CGPoint()
   
   /// Use this to return the desired offset you wish the Callout to have on the x-axis.
   public var offset: CGPoint = CGPoint()
@@ -64,6 +72,7 @@ public class ChartCallout: NSObject {
     NSUIGraphicsPushContext(context)
     image!.drawInRect(rect)
     NSUIGraphicsPopContext()
+
   }
   
   /// This method enables a custom Callout to update it's content everytime the CalloutView is redrawn according to the data entry it points to.

@@ -609,7 +609,9 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
               
               for callout in callouts!
               {
-                  if CGRectContainsPoint(callout.rect, point)
+                  guard let rect = callout.rect else { continue }
+                
+                  if CGRectContainsPoint(rect, point)
                   {
                       if (delegate !== nil)
                       {
@@ -673,6 +675,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
             if _data !== nil && (_pinchZoomEnabled || _scaleXEnabled || _scaleYEnabled)
             {
                 _isScaling = true
+                isScaling = true
                 
                 if (_pinchZoomEnabled)
                 {
@@ -700,6 +703,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
             if (_isScaling)
             {
                 _isScaling = false
+                isScaling = false
                 
                 // Range might have changed, which means that Y-axis labels could have changed in size, affecting Y-axis size. So we need to recalculate offsets.
                 calculateOffsets()
@@ -772,7 +776,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                 (!self.hasNoDragOffset || !self.isFullyZoomedOut)
             {
                 _isDragging = true
-                
+                isDragging = true
                 _closestDataSetToTouch = getDataSetByTouchPoint(recognizer.nsuiLocationOfTouch(0, inView: self))
                 
                 let translation = recognizer.translationInView(self)
@@ -786,6 +790,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                         // We can stop dragging right now, and let the scroll view take control
                         _outerScrollView = nil
                         _isDragging = false
+                        isDragging = false
                     }
                 }
                 else
@@ -804,6 +809,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                 // We will only handle highlights on NSUIGestureRecognizerState.Changed
                 
                 _isDragging = false
+                isDragging = false
             }
         }
         else if (recognizer.state == NSUIGestureRecognizerState.Changed)
@@ -848,6 +854,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                 }
                 
                 _isDragging = false
+                isDragging = false
             }
             
             if (_outerScrollView !== nil)
