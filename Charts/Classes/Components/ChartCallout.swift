@@ -18,14 +18,8 @@ public class ChartCallout: NSObject {
   
   /// Use this to set the desired point on the chart canvas
   public var position: CGPoint = CGPoint()
-  {
-    didSet
-    {
-      currentPosition = position
-    }
-  }
   
-  public var currentPosition: CGPoint = CGPoint()
+  //public var currentPosition: CGPoint = CGPoint()
   
   /// Use this to return the desired offset you wish the Callout to have on the x-axis.
   public var offset: CGPoint = CGPoint()

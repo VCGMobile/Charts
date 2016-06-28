@@ -480,7 +480,23 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
             _xAxis.axisLabelModulus = 1
         }
     }
-    
+  
+    public override func getCalloutPosition(callout: ChartCallout) -> CGPoint
+    {
+      let xVal = callout.position.x + viewPortHandler.transX
+      let yVal = callout.position.y + viewPortHandler.transY
+    //getValueByTouchPoint(
+      //getPixelForValue
+      var pt = CGPoint(x: xVal, y: yVal)
+      return pt
+      /*print(callout.position)
+      let bounds = getValueByTouchPoint(
+        pt: CGPoint(x: callout.position.x, y: callout.position.y),
+        axis: .Left)
+      print(bounds)
+      return bounds*/
+    }
+  
     public override func getMarkerPosition(entry e: ChartDataEntry, highlight: ChartHighlight) -> CGPoint
     {
         guard let data = _data else { return CGPointZero }
@@ -604,6 +620,8 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         {
             if !self.isHighLightPerTapEnabled { return }
           
+            let h = getHighlightByTouchPoint(recognizer.locationInView(self))
+          
             if callouts != nil {
               let point = recognizer.locationInView(self)
               
@@ -621,9 +639,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                   }
               }
             }
-          
-            let h = getHighlightByTouchPoint(recognizer.locationInView(self))
-            
+
             if (h === nil || h!.isEqual(self.lastHighlighted))
             {
                 self.highlightValue(highlight: nil, callDelegate: true)
@@ -675,8 +691,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
             if _data !== nil && (_pinchZoomEnabled || _scaleXEnabled || _scaleYEnabled)
             {
                 _isScaling = true
-                isScaling = true
-                
+              
                 if (_pinchZoomEnabled)
                 {
                     _gestureScaleAxis = .Both
@@ -703,8 +718,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
             if (_isScaling)
             {
                 _isScaling = false
-                isScaling = false
-                
+              
                 // Range might have changed, which means that Y-axis labels could have changed in size, affecting Y-axis size. So we need to recalculate offsets.
                 calculateOffsets()
                 setNeedsDisplay()
@@ -776,7 +790,6 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                 (!self.hasNoDragOffset || !self.isFullyZoomedOut)
             {
                 _isDragging = true
-                isDragging = true
                 _closestDataSetToTouch = getDataSetByTouchPoint(recognizer.nsuiLocationOfTouch(0, inView: self))
                 
                 let translation = recognizer.translationInView(self)
@@ -790,7 +803,6 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                         // We can stop dragging right now, and let the scroll view take control
                         _outerScrollView = nil
                         _isDragging = false
-                        isDragging = false
                     }
                 }
                 else
@@ -809,7 +821,6 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                 // We will only handle highlights on NSUIGestureRecognizerState.Changed
                 
                 _isDragging = false
-                isDragging = false
             }
         }
         else if (recognizer.state == NSUIGestureRecognizerState.Changed)
@@ -854,7 +865,6 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                 }
                 
                 _isDragging = false
-                isDragging = false
             }
             
             if (_outerScrollView !== nil)

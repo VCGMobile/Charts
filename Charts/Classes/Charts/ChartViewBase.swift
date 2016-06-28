@@ -151,9 +151,6 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
   /// An extra offset to be appended to the viewport's left
   public var extraLeftOffset: CGFloat = 0.0
   
-  public var isScaling: Bool = false
-  public var isDragging: Bool = false
-  
   public func setExtraOffsets(left left: CGFloat, top: CGFloat, right: CGFloat, bottom: CGFloat)
   {
     extraLeftOffset = left
@@ -549,43 +546,14 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
     
     for callout in callouts!
     {
-      if !isScaling && !isDragging && callout.currentPosition != callout.position {
-        callout.draw(context: context, point: callout.currentPosition)
-        continue
-      }
-      
-      
-      if isScaling {
-        let xVal = callout.position.x + (viewPortHandler.transX / viewPortHandler.scaleX)
-        let yVal = isScaling ? callout.position.y - (viewPortHandler.transY / viewPortHandler.scaleY): callout.position.y + (viewPortHandler.transY / viewPortHandler.scaleY)
-        let pos = CGPointMake(xVal, yVal)
-        
-        callout.currentPosition = pos
-        
+        let pos = getCalloutPosition(callout)
+          
         if (!_viewPortHandler.isInBounds(x: pos.x, y: pos.y))
         {
           continue
         }
         
         callout.draw(context: context, point: pos)
-        
-        continue
-      }
-      
-
-        let xVal = callout.position.x + viewPortHandler.transX
-        let yVal = callout.position.y + (viewPortHandler.transY / viewPortHandler.scaleY)
-        let pos = CGPointMake(xVal, yVal)
-        
-        callout.currentPosition = pos
-        
-        if (!_viewPortHandler.isInBounds(x: pos.x, y: pos.y))
-        {
-          continue
-        }
-        
-        callout.draw(context: context, point: pos)
-      
     }
     
   }
@@ -638,6 +606,12 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
         }
       }
     }
+  }
+
+  /// - returns: the actual position in pixels of the Callout
+  public func getCalloutPosition(callout: ChartCallout) -> CGPoint
+  {
+    fatalError("getCalloutPosition() cannot be called on ChartViewBase")
   }
   
   /// - returns: the actual position in pixels of the MarkerView for the given Entry in the given DataSet.
