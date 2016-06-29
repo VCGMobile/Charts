@@ -480,21 +480,30 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
             _xAxis.axisLabelModulus = 1
         }
     }
-  
+ 
     public override func getCalloutPosition(callout: ChartCallout) -> CGPoint
     {
-      let xVal = callout.position.x + viewPortHandler.transX
-      let yVal = callout.position.y + viewPortHandler.transY
-    //getValueByTouchPoint(
-      //getPixelForValue
-      var pt = CGPoint(x: xVal, y: yVal)
-      return pt
-      /*print(callout.position)
-      let bounds = getValueByTouchPoint(
-        pt: CGPoint(x: callout.position.x, y: callout.position.y),
-        axis: .Left)
-      print(bounds)
-      return bounds*/
+      
+      
+      //return _xAxisRenderer.getCalloutPosition(callout: callout)
+//      var matrix = CGAffineTransformMakeTranslation(callout.position.x, callout.position.y)
+//      //matrix = CGAffineTransformScale(matrix, scaleX, scaleY)
+//      //matrix = CGAffineTransformTranslate(matrix,
+//      //                                    -callout.position.x, -callout.position.y)
+//
+//      matrix = CGAffineTransformConcat(_viewPortHandler.touchMatrix, matrix)
+//      //matrix = CGAffineTransformTranslate(matrix,
+//      //                                    -location.x, -location.y)
+//      
+//      //matrix = CGAffineTransformConcat(_viewPortHandler.touchMatrix, matrix)
+//      
+      var matrix = _viewPortHandler.touchMatrix
+      
+      let pt = CGPointApplyAffineTransform(callout.position, matrix)
+
+      let position = CGPoint(x: pt.x, y: pt.y)
+      
+      return position
     }
   
     public override func getMarkerPosition(entry e: ChartDataEntry, highlight: ChartHighlight) -> CGPoint

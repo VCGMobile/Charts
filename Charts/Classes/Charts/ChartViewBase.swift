@@ -546,6 +546,8 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
     
     for callout in callouts!
     {
+      
+      //renderCallouts(context, callout: callout)
         let pos = getCalloutPosition(callout)
           
         if (!_viewPortHandler.isInBounds(x: pos.x, y: pos.y))
@@ -608,6 +610,13 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
     }
   }
 
+  public func renderCallouts(context: CGContext, callout: ChartCallout) {
+    
+    fatalError("renderCallouts() cannot be called on ChartViewBase")
+    
+    
+  }
+  
   /// - returns: the actual position in pixels of the Callout
   public func getCalloutPosition(callout: ChartCallout) -> CGPoint
   {
