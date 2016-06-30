@@ -71,6 +71,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     internal var _xAxisRenderer: ChartXAxisRenderer!
     
     internal var _tapGestureRecognizer: NSUITapGestureRecognizer!
+    internal var _singleTapGestureRecognizer: NSUITapGestureRecognizer!
     internal var _doubleTapGestureRecognizer: NSUITapGestureRecognizer!
     #if !os(tvOS)
     internal var _pinchGestureRecognizer: NSUIPinchGestureRecognizer!
@@ -113,6 +114,10 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         self.highlighter = ChartHighlighter(chart: self)
         
         _tapGestureRecognizer = NSUITapGestureRecognizer(target: self, action: #selector(BarLineChartViewBase.tapGestureRecognized(_:)))
+        _tapGestureRecognizer.numberOfTouchesRequired = 2
+      
+        _singleTapGestureRecognizer = NSUITapGestureRecognizer(target: self, action: #selector(BarLineChartViewBase.singleTapGestureRecognized(_:)))
+      
         _doubleTapGestureRecognizer = NSUITapGestureRecognizer(target: self, action: #selector(BarLineChartViewBase.doubleTapGestureRecognized(_:)))
         _doubleTapGestureRecognizer.nsuiNumberOfTapsRequired = 2
         _panGestureRecognizer = NSUIPanGestureRecognizer(target: self, action: #selector(BarLineChartViewBase.panGestureRecognized(_:)))
@@ -120,6 +125,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         _panGestureRecognizer.delegate = self
         
         self.addGestureRecognizer(_tapGestureRecognizer)
+        self.addGestureRecognizer(_singleTapGestureRecognizer)
         self.addGestureRecognizer(_doubleTapGestureRecognizer)
         self.addGestureRecognizer(_panGestureRecognizer)
         
@@ -636,7 +642,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                       if (delegate !== nil)
                       {
                         delegate?.chartCalloutTapped?(self, callout: callout)
-                        return
+                        break
                       }
                   }
               }
@@ -657,13 +663,39 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         }
     }
   
+  @objc private func singleTapGestureRecognized(recognizer: NSUITapGestureRecognizer)
+  {
+    stopDeceleration()
+    
+    if (recognizer.state == NSUIGestureRecognizerState.Ended)
+    {
+      if callouts != nil {
+        let point = recognizer.locationInView(self)
+        
+        for callout in callouts!
+        {
+          guard let rect = callout.rect else { continue }
+          
+          if CGRectContainsPoint(rect, point)
+          {
+            if (delegate !== nil)
+            {
+              delegate?.chartCalloutTapped?(self, callout: callout)
+              break
+            }
+          }
+        }
+      }
+      }
+  }
+  
     @objc private func doubleTapGestureRecognized(recognizer: NSUITapGestureRecognizer)
     {
         if _data === nil
         {
             return
         }
-        
+      
         if (recognizer.state == NSUIGestureRecognizerState.Ended)
         {
             if _data !== nil && _doubleTapToZoomEnabled
