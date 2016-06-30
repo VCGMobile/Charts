@@ -426,13 +426,24 @@ public class ChartViewPortHandler: NSObject
     {
         return _contentRect.origin.x <= x ? true : false
     }
-    
+  
+    public func isInBoundsLeft(x: CGFloat, offset: CGFloat) -> Bool
+    {
+      return _contentRect.origin.x + offset <= x ? true : false
+    }
+  
     public func isInBoundsRight(x: CGFloat) -> Bool
     {
         let normalizedX = CGFloat(Int(x * 100.0)) / 100.0
         return (_contentRect.origin.x + _contentRect.size.width) >= normalizedX ? true : false
     }
-    
+  
+    public func isInBoundsRight(x: CGFloat, offset: CGFloat) -> Bool
+    {
+      let normalizedX = CGFloat(Int(x * 100.0)) / 100.0
+      return (_contentRect.origin.x + _contentRect.size.width - offset) >= normalizedX ? true : false
+    }
+  
     public func isInBoundsTop(y: CGFloat) -> Bool
     {
         return _contentRect.origin.y <= y ? true : false
@@ -443,7 +454,13 @@ public class ChartViewPortHandler: NSObject
         let normalizedY = CGFloat(Int(y * 100.0)) / 100.0
         return (_contentRect.origin.y + _contentRect.size.height) >= normalizedY ? true : false
     }
-    
+  
+    public func isInBoundsBottom(y: CGFloat, offset: CGFloat) -> Bool
+    {
+      let normalizedY = CGFloat(Int(y * 100.0)) / 100.0
+      return (_contentRect.origin.y + _contentRect.size.height - offset) >= normalizedY ? true : false
+    }
+  
     /// - returns: the current x-scale factor
     public var scaleX: CGFloat
     {

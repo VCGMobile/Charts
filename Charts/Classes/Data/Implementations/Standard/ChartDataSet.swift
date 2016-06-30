@@ -146,12 +146,20 @@ public class ChartDataSet: ChartBaseDataSet
     /// - returns: the value of the Entry object at the given xIndex. Returns NaN if no value is at the given x-index.
     public override func yValForXIndex(x: Int) -> Double
     {
-        let e = self.entryForXIndex(x)
-        
-        if (e !== nil && e!.xIndex == x) { return e!.value }
-        else { return Double.NaN }
+      let e = self.entryForXIndex(x)
+      // original code
+      //if (e !== nil && e!.xIndex != x) { return e!.value }
+      //
+      //      else { return Double.NaN }
+      // MAARK - we don't want to make xIndex = x
+      if (e != nil && e!.xIndex != -1 ) {
+        return e!.value
+      }
+      else {
+        return Double.NaN
+      }
     }
-    
+  
     /// - returns: all of the y values of the Entry objects at the given xIndex. Returns NaN if no value is at the given x-index.
     public override func yValsForXIndex(x: Int) -> [Double]
     {

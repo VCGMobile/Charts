@@ -24,6 +24,9 @@ public class ChartCallout: NSObject {
   /// Use this to return the desired offset you wish the Callout to have on the x-axis.
   public var offset: CGPoint = CGPoint()
   
+  // This is the value that the callout has on the chart grid.  Its used to handle zoom and panning
+  public var valuePoint: CGPoint = CGPoint()
+  
   /// The callout's size
   public var size: CGSize
     {

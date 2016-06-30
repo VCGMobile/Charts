@@ -460,7 +460,6 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         prepareOffsetMatrix()
         prepareValuePxMatrix()
     }
-   
 
     /// calculates the modulus for x-labels and grid
     internal func calcModulus()
@@ -483,27 +482,22 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
  
     public override func getCalloutPosition(callout: ChartCallout) -> CGPoint
     {
+      var pt = callout.position
       
+      if scaleX == 1 && scaleY == 1 && _viewPortHandler.transX == 0 && _viewPortHandler.transY == 0 {
+        getTransformer(.Left).pixelToValue(&pt)
+        
+        callout.valuePoint = pt
+      } else {
+        pt = callout.valuePoint
+      }
       
-      //return _xAxisRenderer.getCalloutPosition(callout: callout)
-//      var matrix = CGAffineTransformMakeTranslation(callout.position.x, callout.position.y)
-//      //matrix = CGAffineTransformScale(matrix, scaleX, scaleY)
-//      //matrix = CGAffineTransformTranslate(matrix,
-//      //                                    -callout.position.x, -callout.position.y)
-//
-//      matrix = CGAffineTransformConcat(_viewPortHandler.touchMatrix, matrix)
-//      //matrix = CGAffineTransformTranslate(matrix,
-//      //                                    -location.x, -location.y)
-//      
-//      //matrix = CGAffineTransformConcat(_viewPortHandler.touchMatrix, matrix)
-//      
-      var matrix = _viewPortHandler.touchMatrix
-      
-      let pt = CGPointApplyAffineTransform(callout.position, matrix)
+      getTransformer(.Left).pointValueToPixel(&pt)
 
       let position = CGPoint(x: pt.x, y: pt.y)
-      
+
       return position
+      
     }
   
     public override func getMarkerPosition(entry e: ChartDataEntry, highlight: ChartHighlight) -> CGPoint
@@ -562,7 +556,6 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         
         // position of the marker depends on selected value index and value
         var pt = CGPoint(x: xPos, y: yPos * _animator.phaseY)
-        
         getTransformer(data.getDataSetByIndex(dataSetIndex)!.axisDependency).pointValueToPixel(&pt)
         
         return pt
@@ -649,19 +642,21 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
               }
             }
 
-            if (h === nil || h!.isEqual(self.lastHighlighted))
-            {
-                self.highlightValue(highlight: nil, callDelegate: true)
-                self.lastHighlighted = nil
-            }
-            else
-            {
-                self.lastHighlighted = h
-                self.highlightValue(highlight: h, callDelegate: true)
-            }
+          // MAARK - this prevents the market from disappearing when it
+          // is same as previous
+          if (h === nil /*|| h!.isEqual(self.lastHighlighted)*/)
+          {
+            self.highlightValue(highlight: nil, callDelegate: true)
+            self.lastHighlighted = nil
+          }
+          else
+          {
+            self.lastHighlighted = h
+            self.highlightValue(highlight: h, callDelegate: true)
+          } 
         }
     }
-    
+  
     @objc private func doubleTapGestureRecognized(recognizer: NSUITapGestureRecognizer)
     {
         if _data === nil

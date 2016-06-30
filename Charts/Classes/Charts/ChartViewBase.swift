@@ -547,15 +547,26 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
     for callout in callouts!
     {
       
-      //renderCallouts(context, callout: callout)
-        let pos = getCalloutPosition(callout)
-          
-        if (!_viewPortHandler.isInBounds(x: pos.x, y: pos.y))
-        {
-          continue
-        }
-        
-        callout.draw(context: context, point: pos)
+      var pos = getCalloutPosition(callout)
+      
+      let offset: CGFloat = 50
+      if !_viewPortHandler.isInBoundsLeft(pos.x, offset: offset - 10) {
+        pos.x = offset - 10
+      }
+      
+      if !_viewPortHandler.isInBoundsRight(pos.x, offset: offset) {
+        pos.x = _viewPortHandler.chartWidth - offset
+      }
+      
+      if !_viewPortHandler.isInBoundsBottom(pos.y, offset: offset) {
+        pos.y = _viewPortHandler.chartHeight - offset
+      }
+      
+      if !_viewPortHandler.isInBoundsTop(pos.y) {
+        pos.y = 0
+      }
+      
+      callout.draw(context: context, point: pos)
     }
     
   }
@@ -609,7 +620,7 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
       }
     }
   }
-
+  
   public func renderCallouts(context: CGContext, callout: ChartCallout) {
     
     fatalError("renderCallouts() cannot be called on ChartViewBase")

@@ -268,17 +268,6 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
   }
   
   /// MAARK
-  public func getCalloutPosition(callout callout: ChartCallout) -> CGPoint
-  {
-    // rtv: code to see if this is the proper way to get the callout position.
-    let valueToPixelMatrix = transformer.valueToPixelMatrix
-    
-    var position = CGPoint(x: callout.position.x, y: callout.position.y)
-    
-    position = CGPointApplyAffineTransform(position, valueToPixelMatrix)
-    
-    return position
-  }
   
   public func renderGridAreas(context context: CGContext)
   {
