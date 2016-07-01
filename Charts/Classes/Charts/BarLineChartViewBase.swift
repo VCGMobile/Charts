@@ -623,9 +623,16 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         {
             return
         }
-        
+      
+      if (recognizer.state == NSUIGestureRecognizerState.Began)
+      {
+        self.removeGestureRecognizer(_pinchGestureRecognizer)
+      }
+      
         if (recognizer.state == NSUIGestureRecognizerState.Ended)
         {
+          self.addGestureRecognizer(_pinchGestureRecognizer)
+          
             if !self.isHighLightPerTapEnabled { return }
           
             let h = getHighlightByTouchPoint(recognizer.locationInView(self))
@@ -872,7 +879,9 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
             }
             else if (isHighlightPerDragEnabled)
             {
-                let h = getHighlightByTouchPoint(recognizer.locationInView(self))
+              if recognizer.nsuiNumberOfTouches() != 2 { return }
+
+              let h = getHighlightByTouchPoint(recognizer.locationInView(self))
                 
                 let lastHighlighted = self.lastHighlighted
                 
