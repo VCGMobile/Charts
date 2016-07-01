@@ -88,6 +88,9 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
   /// description text that appears in the bottom right corner of the chart
   public var descriptionText = "Description"
   
+  /// MAARK
+  public var multipleMarkersEnabled: Bool = false
+  
   /// if true, units are drawn next to the values in the chart
   internal var _drawUnitInChart = false
   
@@ -496,35 +499,70 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
     }
     else
     {
-      // set the indices to highlight
       entry = _data?.getEntryForHighlight(h!)
-      if (entry == nil)
-      {
-        h = nil
-        _indicesToHighlight.removeAll(keepCapacity: false)
-      }
-      else
-      {
-        if self is BarLineChartViewBase
-          && (self as! BarLineChartViewBase).isHighlightFullBarEnabled
-        {
-          h = ChartHighlight(xIndex: h!.xIndex, value: Double.NaN, dataIndex: -1, dataSetIndex: -1, stackIndex: -1)
-        }
+      
+      if multipleMarkersEnabled {
         
-        _indicesToHighlight = [h!]
+        _indicesToHighlight.removeAll(keepCapacity: false)
+        
+        guard let data = _data else { return }
+        
+        for i in 0...data.dataSets.count - 1 {
+          let dSet = data.dataSets[i]
+
+          let val = dSet.entryForXIndex(h!.xIndex)
+          
+          h = ChartHighlight(xIndex: h!.xIndex, value: val!.value, dataIndex: -1, dataSetIndex: i, stackIndex: -1)
+          
+          _indicesToHighlight.append(h!)
+        }
+
+        if let hi = _indicesToHighlight.first {
+          if (callDelegate && delegate != nil)
+          {
+            if (h == nil)
+            {
+              delegate!.chartValueNothingSelected?(self)
+            }
+            else
+            {
+              // notify the listener
+              delegate!.chartValueSelected?(self, entry: entry!, dataSetIndex: h!.dataSetIndex, highlight: h!)
+            }
+          }
+        }
+      } else {
+        // set the indices to highlight
+        
+        if (entry == nil)
+        {
+          h = nil
+          _indicesToHighlight.removeAll(keepCapacity: false)
+        }
+        else
+        {
+          if self is BarLineChartViewBase
+            && (self as! BarLineChartViewBase).isHighlightFullBarEnabled
+          {
+            h = ChartHighlight(xIndex: h!.xIndex, value: Double.NaN, dataIndex: -1, dataSetIndex: -1, stackIndex: -1)
+          }
+          
+          _indicesToHighlight = [h!]
+        }
       }
-    }
-    
-    if (callDelegate && delegate != nil)
-    {
-      if (h == nil)
+      
+      
+      if (callDelegate && delegate != nil)
       {
-        delegate!.chartValueNothingSelected?(self)
-      }
-      else
-      {
-        // notify the listener
-        delegate!.chartValueSelected?(self, entry: entry!, dataSetIndex: h!.dataSetIndex, highlight: h!)
+        if (h == nil)
+        {
+          delegate!.chartValueNothingSelected?(self)
+        }
+        else
+        {
+          // notify the listener
+          delegate!.chartValueSelected?(self, entry: entry!, dataSetIndex: h!.dataSetIndex, highlight: h!)
+        }
       }
     }
     
