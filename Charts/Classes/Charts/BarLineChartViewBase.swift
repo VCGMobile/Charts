@@ -619,6 +619,9 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     
     @objc private func tapGestureRecognized(recognizer: NSUITapGestureRecognizer)
     {
+      // Mkdebug
+        print("tapGestureRecognized")
+      
         if _data === nil
         {
             return
@@ -672,6 +675,11 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
   
   @objc private func singleTapGestureRecognized(recognizer: NSUITapGestureRecognizer)
   {
+    
+    // Mkdebug
+    print("singleTapGestureRecognized")
+
+    
     stopDeceleration()
     
     if (recognizer.state == NSUIGestureRecognizerState.Ended)
@@ -719,16 +727,25 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                     location.y = -(self.bounds.size.height - location.y - _viewPortHandler.offsetBottom)
                 }
                 
-                self.zoom(isScaleXEnabled ? 1.4 : 1.0, scaleY: isScaleYEnabled ? 1.4 : 1.0, x: location.x, y: location.y)
-            }
+              //self.zoom(isScaleXEnabled ? 1.4 : 1.0, scaleY: isScaleYEnabled ? 1.4 : 1.0, x: location.x, y: location.y)
+                self.zoom(0.1,  scaleY: 0.1, x: 0, y: 0)
+
+          }
         }
     }
     
     #if !os(tvOS)
     @objc private func pinchGestureRecognized(recognizer: NSUIPinchGestureRecognizer)
     {
+        //Mkdebug
+        //print("pinchGestureRecognized")
+  
+      
+      
         if (recognizer.state == NSUIGestureRecognizerState.Began)
         {
+          // Mkdebug
+          //print("pinchGestureRecognized - began")
             stopDeceleration()
             
             if _data !== nil && (_pinchZoomEnabled || _scaleXEnabled || _scaleYEnabled)
@@ -758,6 +775,9 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         else if (recognizer.state == NSUIGestureRecognizerState.Ended ||
             recognizer.state == NSUIGestureRecognizerState.Cancelled)
         {
+          // Mkdebug
+          //print("pinchGestureRecognized - ended/cancelled")
+
             if (_isScaling)
             {
                 _isScaling = false
@@ -769,6 +789,10 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         }
         else if (recognizer.state == NSUIGestureRecognizerState.Changed)
         {
+          // Mkdebug
+          //print("pinchGestureRecognized - changed")
+
+          
             let isZoomingOut = (recognizer.nsuiScale < 1)
             var canZoomMoreX = isZoomingOut ? _viewPortHandler.canZoomOutMoreX : _viewPortHandler.canZoomInMoreX
             var canZoomMoreY = isZoomingOut ? _viewPortHandler.canZoomOutMoreY : _viewPortHandler.canZoomInMoreY
@@ -817,13 +841,18 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     
     @objc private func panGestureRecognized(recognizer: NSUIPanGestureRecognizer)
     {
+      
         if (recognizer.state == NSUIGestureRecognizerState.Began && recognizer.nsuiNumberOfTouches() > 0)
         {
+            // MAARK
+            _pinchZoomEnabled = false
+          
             stopDeceleration()
             
             if _data === nil
             { // If we have no data, we have nothing to pan and no data to highlight
-                return;
+              //print("panGestureRecognized BEGAN data = nil")      //Mkdebug
+              return;
             }
             
             // If drag is enabled and we are in a position where there's something to drag:
@@ -880,14 +909,14 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
             else if (isHighlightPerDragEnabled)
             {
               if recognizer.nsuiNumberOfTouches() != 2 { return }
-
+ 
               let h = getHighlightByTouchPoint(recognizer.locationInView(self))
-                
+ 
                 let lastHighlighted = self.lastHighlighted
                 
                 if ((h === nil && lastHighlighted !== nil) ||
                     (h !== nil && lastHighlighted === nil) ||
-                    (h !== nil && lastHighlighted !== nil && !h!.isEqual(lastHighlighted)))
+                  (h !== nil && lastHighlighted !== nil /*&& !h!.isEqual(lastHighlighted)*/)) // MAARK - removes case where highlight is cleared when we don't want it to
                 {
                     self.lastHighlighted = h
                     self.highlightValue(highlight: h, callDelegate: true)
@@ -896,6 +925,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         }
         else if (recognizer.state == NSUIGestureRecognizerState.Ended || recognizer.state == NSUIGestureRecognizerState.Cancelled)
         {
+
             if (_isDragging)
             {
                 if (recognizer.state == NSUIGestureRecognizerState.Ended && isDragDecelerationEnabled)
@@ -917,6 +947,10 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                 _outerScrollView?.scrollEnabled = true
                 _outerScrollView = nil
             }
+          
+            // MKdebug
+            _pinchZoomEnabled = true
+          
         }
     }
     
@@ -1111,7 +1145,11 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         
         let matrix = _viewPortHandler.zoomIn(x: center.x, y: -center.y)
         _viewPortHandler.refresh(newMatrix: matrix, chart: self, invalidate: false)
-        
+      
+      
+      // Mkdebug
+      print("ZOOM IN scaleX=" + String(center.x) + " scaleY=" + String(-center.y))
+      
         // Range might have changed, which means that Y-axis labels could have changed in size, affecting Y-axis size. So we need to recalculate offsets.
         calculateOffsets()
         setNeedsDisplay()
@@ -1125,6 +1163,9 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         let matrix = _viewPortHandler.zoomOut(x: center.x, y: -center.y)
         _viewPortHandler.refresh(newMatrix: matrix, chart: self, invalidate: false)
 
+      // Mkdebug
+      print("ZOOM OUT scaleX=" + String(center.x) + " scaleY=" + String(-center.y))
+      
         // Range might have changed, which means that Y-axis labels could have changed in size, affecting Y-axis size. So we need to recalculate offsets.
         calculateOffsets()
         setNeedsDisplay()
@@ -1139,6 +1180,9 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     /// - parameter y:
     public func zoom(scaleX: CGFloat, scaleY: CGFloat, x: CGFloat, y: CGFloat)
     {
+      // Mkdebug
+      //print("ZOOM scaleX=" + String(scaleX) + " scaleY=" + String(scaleY))
+      
         let matrix = _viewPortHandler.zoom(scaleX: scaleX, scaleY: scaleY, x: x, y: y)
         _viewPortHandler.refresh(newMatrix: matrix, chart: self, invalidate: false)
         

@@ -53,6 +53,10 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
     return _xAxis
   }
   
+  
+  /// MAARK 
+  public var disableHighlighting: Bool = false
+  
   /// the default value formatter
   internal var _defaultValueFormatter: NSNumberFormatter = ChartUtils.defaultValueFormatter()
   
@@ -426,7 +430,13 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
   /// - returns: true if there are values to highlight, false if there are no values to highlight.
   public func valuesToHighlight() -> Bool
   {
-    return _indicesToHighlight.count > 0
+    // MAARK
+    if (!disableHighlighting) {
+      return _indicesToHighlight.count > 0
+    }
+    else {
+      return false
+    }    
   }
   
   /// Highlights the values at the given indices in the given DataSets. Provide
@@ -495,6 +505,7 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
     
     if (h == nil)
     {
+      print("highlightValue h == nil")
       _indicesToHighlight.removeAll(keepCapacity: false)
     }
     else
@@ -537,7 +548,10 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
         if (entry == nil)
         {
           h = nil
-          _indicesToHighlight.removeAll(keepCapacity: false)
+          //print("highlightValue entry == nil occurred.")
+          // MAARK disabled below because it caused unwanted removal of hitpoint marker 
+          // No known side effects, but keep watch
+          //_indicesToHighlight.removeAll(keepCapacity: false)
         }
         else
         {
