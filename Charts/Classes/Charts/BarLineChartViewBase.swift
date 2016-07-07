@@ -624,7 +624,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     @objc private func tapGestureRecognized(recognizer: NSUITapGestureRecognizer)
     {
       // Mkdebug
-        print("tapGestureRecognized")
+       // print("tapGestureRecognized")
       
         if _data === nil
         {
@@ -681,7 +681,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
   {
     
     // Mkdebug
-    print("singleTapGestureRecognized")
+    //print("singleTapGestureRecognized")
 
     
     stopDeceleration()
@@ -742,15 +742,18 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     @objc private func pinchGestureRecognized(recognizer: NSUIPinchGestureRecognizer)
     {
         //Mkdebug
-      //print("pinchGestureRecognized")
-  
+   
       if (_disablePinch) {
         return;
       }
       
-      
+      //print("pinchGestureRecognized")
+     
         if (recognizer.state == NSUIGestureRecognizerState.Began)
         {
+          
+          //print("pinchGestureRecognized - began")
+
           // Mkdebug
           _disablePan = true
           //print("pinchGestureRecognized - began")
@@ -784,7 +787,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
             recognizer.state == NSUIGestureRecognizerState.Cancelled)
         {
           // Mkdebug
-          //print("pinchGestureRecognized - ended/cancelled")
+            //print("pinchGestureRecognized - ended/cancelled")
 
             if (_isScaling)
             {
@@ -801,9 +804,9 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         else if (recognizer.state == NSUIGestureRecognizerState.Changed)
         {
           // Mkdebug
-          //print("pinchGestureRecognized - changed")
+         // print("pinchGestureRecognized - changed")
 
-            _disablePan = true
+          _disablePan = true
 
             let isZoomingOut = (recognizer.nsuiScale < 1)
             var canZoomMoreX = isZoomingOut ? _viewPortHandler.canZoomOutMoreX : _viewPortHandler.canZoomInMoreX
@@ -853,14 +856,19 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     
     @objc private func panGestureRecognized(recognizer: NSUIPanGestureRecognizer)
     {
-      
+  
         if (_disablePan) {
           return
         }
       
+      //print("panGestureRecognized")
       
         if (recognizer.state == NSUIGestureRecognizerState.Began && recognizer.nsuiNumberOfTouches() > 0)
         {
+          
+           // print("panGestureRecognized - BEGAN")
+
+          
             // MAARK
             _disablePinch = true
           
@@ -875,7 +883,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
             // If drag is enabled and we are in a position where there's something to drag:
             //  * If we're zoomed in, then obviously we have something to drag.
             //  * If we have a drag offset - we always have something to drag
-            if self.isDragEnabled &&
+            if self.isDragEnabled && (recognizer.nsuiNumberOfTouches() == 1) &&
                 (!self.hasNoDragOffset || !self.isFullyZoomedOut)
             {
                 _isDragging = true
@@ -915,10 +923,13 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         else if (recognizer.state == NSUIGestureRecognizerState.Changed)
         {
           
+            //print("panGestureRecognized - CHANGED")
+
+          
             // MAARK
             _disablePinch = true
           
-            if (_isDragging)
+            if (_isDragging && (recognizer.nsuiNumberOfTouches() == 1))
             {
                 let originalTranslation = recognizer.translationInView(self)
                 let translation = CGPoint(x: originalTranslation.x - _lastPanPoint.x, y: originalTranslation.y - _lastPanPoint.y)
@@ -946,6 +957,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         }
         else if (recognizer.state == NSUIGestureRecognizerState.Ended || recognizer.state == NSUIGestureRecognizerState.Cancelled)
         {
+            //print("panGestureRecognized - END")
 
             if (_isDragging)
             {
@@ -970,6 +982,11 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
             }
           
             // MAARK
+          
+          if (delegate != nil) {
+            delegate!.chartHideDataMarker?(self)
+          }
+            self.highlightValue(highlight: nil, callDelegate: true)
             _disablePinch = false
           
         }
@@ -1169,7 +1186,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
       
       
       // Mkdebug
-      print("ZOOM IN scaleX=" + String(center.x) + " scaleY=" + String(-center.y))
+      //print("ZOOM IN scaleX=" + String(center.x) + " scaleY=" + String(-center.y))
       
         // Range might have changed, which means that Y-axis labels could have changed in size, affecting Y-axis size. So we need to recalculate offsets.
         calculateOffsets()
@@ -1185,7 +1202,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         _viewPortHandler.refresh(newMatrix: matrix, chart: self, invalidate: false)
 
       // Mkdebug
-      print("ZOOM OUT scaleX=" + String(center.x) + " scaleY=" + String(-center.y))
+      //print("ZOOM OUT scaleX=" + String(center.x) + " scaleY=" + String(-center.y))
       
         // Range might have changed, which means that Y-axis labels could have changed in size, affecting Y-axis size. So we need to recalculate offsets.
         calculateOffsets()

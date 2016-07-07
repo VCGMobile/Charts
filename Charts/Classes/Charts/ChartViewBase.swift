@@ -39,6 +39,9 @@ public protocol ChartViewDelegate
   
   // Callbacks when the chart is moved / translated via drag gesture.
   optional func chartCalloutTapped(chartView: ChartViewBase, callout: ChartCallout)
+
+  optional func chartHideDataMarker(chartView: ChartViewBase)
+
 }
 
 public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
@@ -505,7 +508,6 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
     
     if (h == nil)
     {
-      print("highlightValue h == nil")
       _indicesToHighlight.removeAll(keepCapacity: false)
     }
     else
