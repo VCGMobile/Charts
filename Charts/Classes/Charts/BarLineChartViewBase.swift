@@ -1071,7 +1071,8 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     {
         if (gestureRecognizer == _panGestureRecognizer)
         {
-            if _data === nil || !_dragEnabled ||
+          
+            if _data === nil || !_dragEnabled || _disablePan ||
                 (self.hasNoDragOffset && self.isFullyZoomedOut && !self.isHighlightPerDragEnabled)
             {
                 return false
@@ -1082,14 +1083,14 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
             #if !os(tvOS)
                 if (gestureRecognizer == _pinchGestureRecognizer)
                 {
-                    if _data === nil || (!_pinchZoomEnabled && !_scaleXEnabled && !_scaleYEnabled)
+                    if _data === nil || _disablePinch || (!_pinchZoomEnabled && !_scaleXEnabled && !_scaleYEnabled)
                     {
                         return false
                     }
                 }
             #endif
         }
-        
+
         return true
     }
     
