@@ -29,7 +29,11 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     private var _autoScaleMinMaxEnabled = false
     private var _autoScaleLastLowestVisibleXIndex: Int!
     private var _autoScaleLastHighestVisibleXIndex: Int!
-    
+  
+    /// MAARK
+    private var _disablePinch = false
+    private var _disablePan = false
+  
     private var _pinchZoomEnabled = false
     private var _doubleTapToZoomEnabled = true
     private var _dragEnabled = true
@@ -738,13 +742,17 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     @objc private func pinchGestureRecognized(recognizer: NSUIPinchGestureRecognizer)
     {
         //Mkdebug
-        //print("pinchGestureRecognized")
+      //print("pinchGestureRecognized")
   
+      if (_disablePinch) {
+        return;
+      }
       
       
         if (recognizer.state == NSUIGestureRecognizerState.Began)
         {
           // Mkdebug
+          _disablePan = true
           //print("pinchGestureRecognized - began")
             stopDeceleration()
             
@@ -786,13 +794,17 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                 calculateOffsets()
                 setNeedsDisplay()
             }
+          
+          _disablePan = false
+          
         }
         else if (recognizer.state == NSUIGestureRecognizerState.Changed)
         {
           // Mkdebug
           //print("pinchGestureRecognized - changed")
 
-          
+            _disablePan = true
+
             let isZoomingOut = (recognizer.nsuiScale < 1)
             var canZoomMoreX = isZoomingOut ? _viewPortHandler.canZoomOutMoreX : _viewPortHandler.canZoomInMoreX
             var canZoomMoreY = isZoomingOut ? _viewPortHandler.canZoomOutMoreY : _viewPortHandler.canZoomInMoreY
@@ -842,10 +854,15 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     @objc private func panGestureRecognized(recognizer: NSUIPanGestureRecognizer)
     {
       
+        if (_disablePan) {
+          return
+        }
+      
+      
         if (recognizer.state == NSUIGestureRecognizerState.Began && recognizer.nsuiNumberOfTouches() > 0)
         {
             // MAARK
-            _pinchZoomEnabled = false
+            _disablePinch = true
           
             stopDeceleration()
             
@@ -897,6 +914,10 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
         }
         else if (recognizer.state == NSUIGestureRecognizerState.Changed)
         {
+          
+            // MAARK
+            _disablePinch = true
+          
             if (_isDragging)
             {
                 let originalTranslation = recognizer.translationInView(self)
@@ -948,8 +969,8 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                 _outerScrollView = nil
             }
           
-            // MKdebug
-            _pinchZoomEnabled = true
+            // MAARK
+            _disablePinch = false
           
         }
     }
