@@ -624,7 +624,6 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     @objc private func tapGestureRecognized(recognizer: NSUITapGestureRecognizer)
     {
       // Mkdebug
-        print("tapGestureRecognized")
       
         if _data === nil
         {
@@ -681,7 +680,6 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
   {
     
     // Mkdebug
-    print("singleTapGestureRecognized")
 
     
     stopDeceleration()

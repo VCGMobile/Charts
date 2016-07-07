@@ -134,6 +134,7 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
   
   /// if set to true, the marker is drawn when a value is clicked
   public var drawMarkers = true
+  public var areaMarkers = false
   
   /// the view that represents the marker
   public var marker: ChartMarker?
@@ -663,14 +664,53 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
         if (pos.y - markerSize.height <= 0.0)
         {
           let y = markerSize.height - pos.y
-          marker!.draw(context: context, point: CGPoint(x: pos.x, y: pos.y + y))
+          
+          if areaMarkers == true {
+
+            drawAreaMakerInContext(context, highlight: highlight, pos: pos)
+            
+          } else {
+            marker!.draw(context: context, point: CGPoint(x: pos.x, y: pos.y + y))
+          }
+          
         }
         else
         {
-          marker!.draw(context: context, point: pos)
+          if areaMarkers == true {
+            
+            drawAreaMakerInContext(context, highlight: highlight, pos: pos)
+    
+          } else {
+            marker!.draw(context: context, point: pos)
+          }
         }
       }
     }
+  }
+  
+  internal func drawAreaMakerInContext(context: CGContext, highlight: ChartHighlight, pos: CGPoint)
+  {
+    guard let dataSet = _data?.dataSets[highlight.dataSetIndex] as? LineChartDataSet else { return }
+    
+    guard let setColor = dataSet.colors.first else { return }
+    
+    let formsize: CGFloat = 14
+    let formColor = setColor.colorWithAlphaComponent(0.5)
+    
+    let frame = CGRect(x: pos.x - (formsize / 2), y: pos.y, width: formsize, height: formsize)
+    
+    CGContextSaveGState(context)
+    defer { CGContextRestoreGState(context) }
+    
+    CGContextSetLineWidth(context, 4.0)
+    
+    CGContextSetStrokeColorWithColor(context, UIColor.whiteColor().CGColor)
+    
+    CGContextAddEllipseInRect(context, frame)
+    CGContextStrokePath(context)
+    
+    CGContextSetFillColorWithColor(context, formColor.CGColor)
+    CGContextFillEllipseInRect(context, frame)
   }
   
   public func renderCallouts(context: CGContext, callout: ChartCallout) {
