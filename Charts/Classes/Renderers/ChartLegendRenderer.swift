@@ -261,7 +261,12 @@ public class ChartLegendRenderer: ChartRendererBase
                 
                 let drawingForm = colors[i] != nil
                 let isStacked = labels[i] == nil // grouped forms have null labels
-                
+              
+                if legend.hasShadowBorder
+                {
+                  drawShadow(context: context, originPosX: originPosX, originPosY: posY, legend: legend)
+                }
+              
                 if (drawingForm)
                 {
                     if (direction == .RightToLeft)
@@ -392,10 +397,31 @@ public class ChartLegendRenderer: ChartRendererBase
                 }
             }
         }
+      
+
     }
 
     private var _formLineSegmentsBuffer = [CGPoint](count: 2, repeatedValue: CGPoint())
-    
+  
+    /// Draws shadow around legend
+  
+  public func drawShadow(context context: CGContext, originPosX: CGFloat, originPosY: CGFloat, legend: ChartLegend)
+    {
+      let shadowOffset = CGSizeMake(0, 2)
+      let blur: CGFloat = 10
+      
+      CGContextSaveGState(context)
+      
+      CGContextSetShadowWithColor(context, shadowOffset, blur, UIColor(white: 0, alpha: 0.19).CGColor)
+
+      let offset: CGFloat = 5
+      let rectangle = CGRectMake(originPosX - (offset * 2), originPosY - offset, legend.neededWidth + (offset * 4), legend.neededHeight + (offset * 2))
+      CGContextSetFillColorWithColor(context, legend.legendBackgroundColor.CGColor)
+      CGContextFillRect(context, rectangle)
+      
+      CGContextStrokePath(context)
+    }
+  
     /// Draws the Legend-form at the given position with the color at the given index.
     public func drawForm(context context: CGContext, x: CGFloat, y: CGFloat, colorIndex: Int, legend: ChartLegend)
     {

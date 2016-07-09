@@ -193,6 +193,10 @@ public class ChartLegend: ChartComponentBase
     /// The text direction of the legend
     public var direction: Direction = Direction.LeftToRight
 
+    // MAARK
+    public var hasShadowBorder: Bool = false
+    public var legendBackgroundColor: UIColor = UIColor.clearColor()
+  
     public var font: NSUIFont = NSUIFont.systemFontOfSize(10.0)
     public var textColor = NSUIColor.blackColor()
 
