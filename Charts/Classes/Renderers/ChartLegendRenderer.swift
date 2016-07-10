@@ -241,6 +241,11 @@ public class ChartLegendRenderer: ChartRendererBase
             
             var lineIndex: Int = 0
             
+            if legend.hasShadowBorder
+            {
+              drawShadow(context: context, originPosX: originPosX, originPosY: posY, legend: legend)
+            }
+            
             for i in 0..<labels.count
             {
                 if (i < calculatedLabelBreakPoints.count && calculatedLabelBreakPoints[i])
@@ -261,11 +266,7 @@ public class ChartLegendRenderer: ChartRendererBase
                 
                 let drawingForm = colors[i] != nil
                 let isStacked = labels[i] == nil // grouped forms have null labels
-              
-                if legend.hasShadowBorder
-                {
-                  drawShadow(context: context, originPosX: originPosX, originPosY: posY, legend: legend)
-                }
+        
               
                 if (drawingForm)
                 {
