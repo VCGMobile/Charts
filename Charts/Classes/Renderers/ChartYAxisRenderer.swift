@@ -172,7 +172,52 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
             }
         }
     }
-    
+  
+    /// MAARK: Using the data set label as the axis label
+    public func computeDataSetLabelForAxis(context context: CGContext, fixedPosition: CGFloat, offset: CGFloat, textAlign: NSTextAlignment)
+    {
+      guard let yAxis = yAxis else { return }
+      
+      guard let dataSets = yAxis.dataSets else { return }
+      
+      let labelFont = yAxis.labelFont
+      let labelTextColor = yAxis.labelTextColor
+      
+      let valueToPixelMatrix = transformer.valueToPixelMatrix
+      
+      var pt = CGPoint()
+      var pts: [CGPoint] = []
+      
+      for set in dataSets
+      {
+        guard let setLabel = set.label else { continue }
+        
+        guard let entry = set.entryForIndex(set.entryCount - 1) else { continue }
+
+        pt.x = 0
+        pt.y = CGFloat(entry.value)
+        pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
+        
+        pt.x = fixedPosition
+
+        for point in pts
+        {
+          let ptDiff = pt.y - point.y
+          
+          if abs(ptDiff) < 20 {
+            pt.y += 25
+            break
+          }
+
+        }
+        //print(pt)
+        
+        pts.append(pt)
+        
+        ChartUtils.drawText(context: context, text: setLabel, point: pt, align: textAlign, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor])
+      }
+    }
+  
     /// draws the y-axis labels to the screen
     public override func renderAxisLabels(context context: CGContext)
     {
@@ -182,7 +227,7 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
         {
             return
         }
-        
+
         let xoffset = yAxis.xOffset
         let yoffset = yAxis.labelFont.lineHeight / 2.5 + yAxis.yOffset
         
@@ -220,8 +265,15 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
                 xPos = viewPortHandler.contentRight - xoffset
             }
         }
-        
+      
+      if yAxis.useDataSetLabelForAxisLabel && dependency == .Right
+      {
+        computeDataSetLabelForAxis(context: context, fixedPosition: xPos, offset: yoffset - yAxis.labelFont.lineHeight, textAlign: textAlign)
+      }
+      else
+      {
         drawYLabels(context: context, fixedPosition: xPos, offset: yoffset - yAxis.labelFont.lineHeight, textAlign: textAlign)
+      }
     }
     
     private var _axisLineSegmentsBuffer = [CGPoint](count: 2, repeatedValue: CGPoint())
@@ -283,7 +335,7 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
         for i in 0 ..< yAxis.entryCount
         {
             let text = yAxis.getFormattedLabel(i)
-            
+
             if (!yAxis.isDrawTopYLabelEntryEnabled && i >= yAxis.entryCount - 1)
             {
                 break

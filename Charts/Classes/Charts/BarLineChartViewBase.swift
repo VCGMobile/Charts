@@ -307,7 +307,12 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
     public override func notifyDataSetChanged()
     {
         calcMinMax()
-        
+      
+        if _rightAxis.useDataSetLabelForAxisLabel
+        {
+          _rightAxis.dataSets = _data?.dataSets
+        }
+      
         _leftAxis?._defaultValueFormatter = _defaultValueFormatter
         _rightAxis?._defaultValueFormatter = _defaultValueFormatter
         
