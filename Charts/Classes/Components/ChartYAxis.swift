@@ -51,7 +51,10 @@ public class ChartYAxis: ChartAxisBase
     
     /// if true, the y-labels show only the minimum and maximum value
     public var showOnlyMinMaxEnabled = false
-    
+  
+    /// MAARK
+    public var onlyFormatSignificantLabels: Bool = false
+
     /// flag that indicates if the axis is inverted or not
     public var inverted = false
     
@@ -253,8 +256,14 @@ public class ChartYAxis: ChartAxisBase
         {
             return ""
         }
-        
-        return (valueFormatter ?? _defaultValueFormatter).stringFromNumber(entries[index])!
+      
+        if onlyFormatSignificantLabels && index == entries.count - 1
+        {
+          return (valueFormatter ?? _defaultValueFormatter).stringFromNumber(entries[index])!
+
+        }
+      
+        return _defaultValueFormatter.stringFromNumber(entries[index])!
     }
     
     /// - returns: true if this axis needs horizontal offset, false if no offset is needed.
