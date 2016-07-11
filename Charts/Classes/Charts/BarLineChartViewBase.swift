@@ -736,8 +736,7 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                     location.y = -(self.bounds.size.height - location.y - _viewPortHandler.offsetBottom)
                 }
                 
-              //self.zoom(isScaleXEnabled ? 1.4 : 1.0, scaleY: isScaleYEnabled ? 1.4 : 1.0, x: location.x, y: location.y)
-                self.zoom(0.1,  scaleY: 0.1, x: 0, y: 0)
+				self.zoomAndCenterViewAnimated(scaleX: 0.1, scaleY: 0.1, xIndex: 0, yValue: 0, axis: ChartYAxis.AxisDependency.Right, duration: 1.0)
 
           }
         }
