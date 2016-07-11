@@ -277,10 +277,12 @@ public class ChartYAxis: ChartAxisBase
       
         if onlyFormatSignificantLabels && index == entries.count - 1
         {
+  
           return (valueFormatter ?? _defaultValueFormatter).stringFromNumber(entries[index])!
 
         }
       
+        _defaultValueFormatter.multiplier = valueFormatter?.multiplier
         return _defaultValueFormatter.stringFromNumber(entries[index])!
     }
     
