@@ -97,7 +97,7 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
   
   /// MAARK
   public var multipleMarkersEnabled: Bool = false
-  
+  //public var rightAxis
   /// if true, units are drawn next to the values in the chart
   internal var _drawUnitInChart = false
   
@@ -605,12 +605,13 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
       var pos = getCalloutPosition(callout)
       
       let offset: CGFloat = 50
+
       if !_viewPortHandler.isInBoundsLeft(pos.x, offset: offset - 10) {
         pos.x = offset - 10
       }
       
       if !_viewPortHandler.isInBoundsRight(pos.x, offset: offset) {
-        pos.x = _viewPortHandler.chartWidth - offset
+        pos.x = _viewPortHandler.contentRect.origin.x + _viewPortHandler.contentRect.size.width - offset
       }
       
       if !_viewPortHandler.isInBoundsBottom(pos.y, offset: offset) {
