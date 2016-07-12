@@ -604,7 +604,7 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
       
       var pos = getCalloutPosition(callout)
       
-      let offset: CGFloat = 50
+      let offset: CGFloat = 22
 
       if !_viewPortHandler.isInBoundsLeft(pos.x, offset: offset - 10) {
         pos.x = offset - 10
@@ -615,7 +615,7 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
       }
       
       if !_viewPortHandler.isInBoundsBottom(pos.y, offset: offset) {
-        pos.y = _viewPortHandler.chartHeight - offset
+        pos.y = _viewPortHandler.chartHeight - offset - 15
       }
       
       if !_viewPortHandler.isInBoundsTop(pos.y) {
