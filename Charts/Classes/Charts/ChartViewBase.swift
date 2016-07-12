@@ -97,7 +97,7 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
   
   /// MAARK
   public var multipleMarkersEnabled: Bool = false
-  //public var rightAxis
+
   /// if true, units are drawn next to the values in the chart
   internal var _drawUnitInChart = false
   
@@ -700,7 +700,7 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
     let formsize: CGFloat = 14
     let formColor = setColor.colorWithAlphaComponent(0.5)
     
-    let frame = CGRect(x: pos.x - (formsize / 2), y: pos.y, width: formsize, height: formsize)
+    let frame = CGRect(x: pos.x - (formsize / 2), y: pos.y - (formsize / 2), width: formsize, height: formsize)
     
     CGContextSaveGState(context)
     defer { CGContextRestoreGState(context) }

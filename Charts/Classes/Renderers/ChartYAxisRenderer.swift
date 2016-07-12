@@ -186,32 +186,37 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
       let valueToPixelMatrix = transformer.valueToPixelMatrix
       
       var pt = CGPoint()
-      var pts: [CGPoint] = []
-      
-      
-      for set in dataSets
-      {
+
+      for i in 0...dataSets.count - 1 {
+
+        let set = dataSets[i]
+        
         guard let setLabel = set.label else { continue }
         
         guard let entry = set.entryForIndex(set.entryCount - 1) else { continue }
-
         pt.x = 0
-        pt.y = CGFloat(entry.value) - 5
-        pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
         
-        pt.x = fixedPosition
-
-        for point in pts
-        {
-          let ptDiff = pt.y - point.y
+        
+        if i == dataSets.count - 1 {
+        
+          pt.y = CGFloat(entry.value) * 1.5
+        
+        } else {
           
-          if abs(ptDiff) < 20 {
-            pt.y += 30
-          }
-
+          let previousSet = dataSets[i + 1]
+          
+          guard let previousEntry = previousSet.entryForIndex(set.entryCount - 1) else { continue }
+          
+          pt.y = (CGFloat(entry.value) + CGFloat(previousEntry.value)) / 2
+          
         }
-
-        pts.append(pt)
+        
+        
+        
+        pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
+        pt.x = fixedPosition
+      
+        pt.y += yAxis.yOffset
         
         ChartUtils.drawText(context: context, text: setLabel, point: pt, align: textAlign, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor])
       }
