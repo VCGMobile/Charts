@@ -185,7 +185,7 @@ public class ChartXAxisRendererBarChart: ChartXAxisRenderer
     
     CGContextSaveGState(context)
     
-    var position = CGPoint(x: 0.0, y: 15.0)
+    var position = CGPoint(x: 0.0, y: 0.0)
     var endPosition = CGPoint(x: 0.0, y: 0.0)
     let valueToPixelMatrix = transformer.valueToPixelMatrix
     
@@ -200,7 +200,8 @@ public class ChartXAxisRendererBarChart: ChartXAxisRenderer
       endPosition.x = CGFloat(ex * step) + CGFloat(ex) * barData.groupSpace - 0.5
       endPosition = CGPointApplyAffineTransform(endPosition, valueToPixelMatrix)
       // Draw rectangle
-      let rectangle = CGRect(x: position.x, y: position.y, width: CGFloat(endPosition.x-position.x), height: viewPortHandler.contentBottom)
+      
+      let rectangle = CGRect(x: position.x, y: viewPortHandler.contentTop, width: CGFloat(endPosition.x-position.x), height: viewPortHandler.contentBottom)
       let color = areaData.color;
       CGContextSetFillColorWithColor(context, color.CGColor)
       CGContextSetStrokeColorWithColor(context, color.CGColor)
