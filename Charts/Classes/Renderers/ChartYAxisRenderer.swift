@@ -188,6 +188,7 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
       var pt = CGPoint()
       var pts: [CGPoint] = []
       
+      
       for set in dataSets
       {
         guard let setLabel = set.label else { continue }
@@ -195,7 +196,7 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
         guard let entry = set.entryForIndex(set.entryCount - 1) else { continue }
 
         pt.x = 0
-        pt.y = CGFloat(entry.value)
+        pt.y = CGFloat(entry.value) - 5
         pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
         
         pt.x = fixedPosition
@@ -205,13 +206,11 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
           let ptDiff = pt.y - point.y
           
           if abs(ptDiff) < 20 {
-            pt.y += 25
-            break
+            pt.y += 30
           }
 
         }
-        //print(pt)
-        
+
         pts.append(pt)
         
         ChartUtils.drawText(context: context, text: setLabel, point: pt, align: textAlign, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor])
