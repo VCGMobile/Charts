@@ -185,6 +185,10 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
       
       let valueToPixelMatrix = transformer.valueToPixelMatrix
       
+      let currentRightPoint = transformer.getValueByTouchPoint(CGPoint(x: viewPortHandler.contentRight, y: viewPortHandler.contentBottom))
+      
+      let entryNumber = Int(floor(currentRightPoint.x))
+      
       var pt = CGPoint()
 
       for i in 0...dataSets.count - 1 {
@@ -193,19 +197,23 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
         
         guard let setLabel = set.label else { continue }
         
-        guard let entry = set.entryForIndex(set.entryCount - 1) else { continue }
+        guard let entry = set.entryForIndex(entryNumber) else { continue }
         pt.x = 0
         
         
         if i == dataSets.count - 1 {
         
-          pt.y = CGFloat(entry.value) * 1.5
+          if entry.value < 0 {
+            pt.y = CGFloat(entry.value) * 1.5
+          } else {
+            pt.y = CGFloat(entry.value) / 4 - 30000
+          }
         
         } else {
           
           let previousSet = dataSets[i + 1]
           
-          guard let previousEntry = previousSet.entryForIndex(set.entryCount - 1) else { continue }
+          guard let previousEntry = previousSet.entryForIndex(entryNumber) else { continue }
           
           pt.y = (CGFloat(entry.value) + CGFloat(previousEntry.value)) / 2
           
