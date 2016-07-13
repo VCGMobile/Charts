@@ -736,8 +736,9 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                     location.y = -(self.bounds.size.height - location.y - _viewPortHandler.offsetBottom)
                 }
                 
-				self.zoomAndCenterViewAnimated(scaleX: 0.1, scaleY: 0.1, xIndex: 0, yValue: 0, axis: ChartYAxis.AxisDependency.Right, duration: 1.0)
-
+              let value = getValueByTouchPoint(pt: _viewPortHandler.contentCenter, axis: ChartYAxis.AxisDependency.Left)
+              
+              self.zoomAndCenterViewAnimated(scaleX: 1, scaleY: 1, xIndex: value.x, yValue: Double(value.y), axis: ChartYAxis.AxisDependency.Left, duration: 1.0)
           }
         }
     }
