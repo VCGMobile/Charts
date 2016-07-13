@@ -209,6 +209,14 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
           
           pt.y = (CGFloat(entry.value) + CGFloat(previousEntry.value)) / 2
           
+          if i <= 8 && i >= 5 {
+            pt.y -= 40000
+          }
+          
+          if i == 7 {
+            pt.y -= 10000
+          }
+          
         }
         
         
