@@ -848,8 +848,12 @@ public class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChar
                     
                     if (delegate !== nil)
                     {
+                        delegate!.chartHideDataMarker?(self)
                         delegate?.chartScaled?(self, scaleX: scaleX, scaleY: scaleY)
                     }
+                  
+                  
+                    highlightValue(highlight: nil, callDelegate: true)
                 }
                 
                 recognizer.nsuiScale = 1.0
