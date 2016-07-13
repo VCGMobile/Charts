@@ -187,22 +187,22 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
       
       let currentRightPoint = transformer.getValueByTouchPoint(CGPoint(x: viewPortHandler.contentRight, y: viewPortHandler.contentBottom))
       
-      let entryNumber = Int(floor(currentRightPoint.x))
+      let entryNumber = Int(ceil(currentRightPoint.x))
       
       var pt = CGPoint()
-
+      
+      pt.x = currentRightPoint.x
       for i in 0...dataSets.count - 1 {
 
         let set = dataSets[i]
         
         guard let setLabel = set.label else { continue }
         
-        guard let entry = set.entryForIndex(entryNumber) else { continue }
+        guard let entry = set.entryForIndex(min(entryNumber, set.entryCount - 1)) else { continue }
         pt.x = 0
         
         
         if i == dataSets.count - 1 {
-        
           if entry.value < 0 {
             pt.y = CGFloat(entry.value) * 1.5
           } else {
@@ -213,16 +213,21 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
           
           let previousSet = dataSets[i + 1]
           
-          guard let previousEntry = previousSet.entryForIndex(entryNumber) else { continue }
+          guard let previousEntry = previousSet.entryForIndex(min(entryNumber, set.entryCount - 1)) else { continue }
           
           pt.y = (CGFloat(entry.value) + CGFloat(previousEntry.value)) / 2
           
-          if i <= 8 && i >= 5 {
-            pt.y -= 40000
-          }
-          
-          if i == 7 {
-            pt.y -= 10000
+          switch i {
+          case 0: pt.y -= 10000
+          case 1: pt.y -= 15000
+          case 2: pt.y -= 20000
+          case 3: break
+          case 4: pt.y -= 20000
+
+          case 5, 6, 7, 8: pt.y -= 40000
+
+          default: break
+            
           }
           
         }
@@ -233,7 +238,7 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
         pt.x = fixedPosition
       
         pt.y += yAxis.yOffset
-        
+        print(pt)
         ChartUtils.drawText(context: context, text: setLabel, point: pt, align: textAlign, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor])
       }
     }
