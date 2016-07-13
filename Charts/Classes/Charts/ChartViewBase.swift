@@ -615,7 +615,7 @@ public class ChartViewBase: NSUIView, ChartDataProvider, ChartAnimatorDelegate
       }
       
       if !_viewPortHandler.isInBoundsBottom(pos.y, offset: offset) {
-        pos.y = _viewPortHandler.chartHeight - offset - 15
+        pos.y = _viewPortHandler.chartHeight - offset - 20
       }
       
       if !_viewPortHandler.isInBoundsTop(pos.y) {

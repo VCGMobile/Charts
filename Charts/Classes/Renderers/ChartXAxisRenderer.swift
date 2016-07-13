@@ -278,49 +278,6 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
       return
     }
     
-    // TODO
-    //        CGContextSaveGState(context)
-    //
-    //        if (!_xAxis.gridAntialiasEnabled)
-    //        {
-    //            CGContextSetShouldAntialias(context, false)
-    //        }
-    //
-    //        CGContextSetStrokeColorWithColor(context, _xAxis.gridColor.CGColor)
-    //        CGContextSetLineWidth(context, _xAxis.gridLineWidth)
-    //        if (_xAxis.gridLineDashLengths != nil)
-    //        {
-    //            CGContextSetLineDash(context, _xAxis.gridLineDashPhase, _xAxis.gridLineDashLengths, _xAxis.gridLineDashLengths.count)
-    //        }
-    //        else
-    //        {
-    //            CGContextSetLineDash(context, 0.0, nil, 0)
-    //        }
-    //
-    //        let valueToPixelMatrix = transformer.valueToPixelMatrix
-    //
-    //        var position = CGPoint(x: 0.0, y: 0.0)
-    //
-    //        for (var i = _minX; i <= _maxX; i += _xAxis.axisLabelModulus)
-    //        {
-    //            position.x = CGFloat(i)
-    //            position.y = 0.0
-    //            position = CGPointApplyAffineTransform(position, valueToPixelMatrix)
-    //
-    //            if (position.x >= viewPortHandler.offsetLeft
-    //                && position.x <= viewPortHandler.chartWidth)
-    //            {
-    //                _gridLineSegmentsBuffer[0].x = position.x
-    //                _gridLineSegmentsBuffer[0].y = viewPortHandler.contentTop
-    //                _gridLineSegmentsBuffer[1].x = position.x
-    //                _gridLineSegmentsBuffer[1].y = viewPortHandler.contentBottom
-    //                CGContextStrokeLineSegments(context, _gridLineSegmentsBuffer, 2)
-    //            }
-    //        }
-    //
-    //        CGContextRestoreGState(context)
-    
-    
     // New isDrawGridAreasEnabled property parallels isDrawGridLinesEnableld
     
     // xAxis.filledAreas is an array of ChartXAxisAreaData instances, a new class
