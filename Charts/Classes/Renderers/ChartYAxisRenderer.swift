@@ -187,7 +187,7 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
       
       let currentRightPoint = transformer.getValueByTouchPoint(CGPoint(x: viewPortHandler.contentRight, y: viewPortHandler.contentBottom))
       
-      let entryNumber = Int(ceil(currentRightPoint.x))
+      let entryNumber = Int(ceil(currentRightPoint.x)) + 2
       
       var pt = CGPoint()
       
@@ -231,14 +231,12 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
           }
           
         }
-        
-        
-        
+
         pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
         pt.x = fixedPosition
       
-        pt.y += yAxis.yOffset
-        print(pt)
+        //pt.y += yAxis.yOffset
+
         ChartUtils.drawText(context: context, text: setLabel, point: pt, align: textAlign, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor])
       }
     }
