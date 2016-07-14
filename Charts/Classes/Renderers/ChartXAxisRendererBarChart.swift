@@ -72,7 +72,7 @@ public class ChartXAxisRendererBarChart: ChartXAxisRenderer
               let date = xAxis.dateFormatter.dateFromString(label!)
               
               let formatter = NSDateFormatter()
-              formatter.dateFormat =  viewPortHandler.scaleX < 3 && viewPortHandler.scaleY < 3 ? "yyyy" : "MMM-yyyy"              
+              formatter.dateFormat =  viewPortHandler.scaleX < 3 && viewPortHandler.scaleY < 3 ? "yyyy" : "MM/yy"
               label = formatter.stringFromDate(date!)
             }
           
