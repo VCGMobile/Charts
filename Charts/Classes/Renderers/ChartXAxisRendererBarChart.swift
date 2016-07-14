@@ -61,12 +61,21 @@ public class ChartXAxisRendererBarChart: ChartXAxisRenderer
         
         for i in self.minX.stride(to: min(self.maxX + 1, xAxis.values.count), by: xAxis.axisLabelModulus)
         {
-            let label = i >= 0 && i < xAxis.values.count ? xAxis.values[i] : nil
+            var label = i >= 0 && i < xAxis.values.count ? xAxis.values[i] : nil
             if (label == nil)
             {
                 continue
             }
-            
+          
+            if xAxis.axisLabelIsDate
+            {
+              let date = xAxis.dateFormatter.dateFromString(label!)
+              
+              let formatter = NSDateFormatter()
+              formatter.dateFormat =  viewPortHandler.scaleX < 3 && viewPortHandler.scaleY < 3 ? "yyyy" : "MMM-yyyy"              
+              label = formatter.stringFromDate(date!)
+            }
+          
             position.x = CGFloat(i * step) + CGFloat(i) * barData.groupSpace + barData.groupSpace / 2.0
             position.y = 0.0
             
