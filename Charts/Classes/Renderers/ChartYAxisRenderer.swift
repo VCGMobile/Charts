@@ -427,8 +427,26 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
                 y1: position.y,
                 y2: position.y);
         }
+      
+      if yAxis.drawTopBorder
+      {
+        CGContextSaveGState(context)
+        
+        CGContextSetStrokeColorWithColor(context, yAxis.topBorderColor.CGColor)
+        CGContextSetLineWidth(context, yAxis.gridLineWidth)
+        CGContextSetLineCap(context, yAxis.gridLineCap)
+        CGContextSetLineDash(context, 0.0, nil, 0)
+        _gridLineBuffer[0].x = viewPortHandler.contentLeft
+        _gridLineBuffer[0].y = viewPortHandler.contentTop
+        _gridLineBuffer[1].x = viewPortHandler.contentRight
+        _gridLineBuffer[1].y = viewPortHandler.contentTop
+        CGContextStrokeLineSegments(context, _gridLineBuffer, 2)
+        
+        CGContextRestoreGState(context)
+        
+      }
     }
-    
+  
     /// Draws the zero line at the specified position.
     public func drawZeroLine(
         context context: CGContext,

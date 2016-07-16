@@ -57,6 +57,8 @@ public class ChartYAxis: ChartAxisBase
     public var useDataSetLabelForAxisLabel: Bool = false
     public var dataSets: [IChartDataSet]?
     public var hideLabels: Bool = false
+    public var drawTopBorder: Bool = false
+    public var topBorderColor: UIColor = UIColor.blackColor()
   
     /// flag that indicates if the axis is inverted or not
     public var inverted = false
