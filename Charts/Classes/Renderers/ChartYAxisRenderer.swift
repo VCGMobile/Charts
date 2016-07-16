@@ -347,7 +347,12 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
     internal func drawYLabels(context context: CGContext, fixedPosition: CGFloat, offset: CGFloat, textAlign: NSTextAlignment)
     {
         guard let yAxis = yAxis else { return }
-        
+      
+        if yAxis.hideLabels
+        {
+          return
+        }
+      
         let labelFont = yAxis.labelFont
         let labelTextColor = yAxis.labelTextColor
         

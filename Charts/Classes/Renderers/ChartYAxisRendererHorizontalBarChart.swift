@@ -58,7 +58,7 @@ public class ChartYAxisRendererHorizontalBarChart: ChartYAxisRenderer
     public override func renderAxisLabels(context context: CGContext)
     {
         guard let yAxis = yAxis else { return }
-        
+
         if (!yAxis.isEnabled || !yAxis.isDrawLabelsEnabled)
         {
             return

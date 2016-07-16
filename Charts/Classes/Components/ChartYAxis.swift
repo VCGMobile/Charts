@@ -56,6 +56,7 @@ public class ChartYAxis: ChartAxisBase
     public var onlyFormatSignificantLabels: Bool = false
     public var useDataSetLabelForAxisLabel: Bool = false
     public var dataSets: [IChartDataSet]?
+    public var hideLabels: Bool = false
   
     /// flag that indicates if the axis is inverted or not
     public var inverted = false
@@ -237,6 +238,11 @@ public class ChartYAxis: ChartAxisBase
     public override func getLongestLabel() -> String
     {
         var longest = ""
+      
+        if hideLabels
+        {
+          return longest
+        }
       
         if axisDependency == .Right && useDataSetLabelForAxisLabel
         {
