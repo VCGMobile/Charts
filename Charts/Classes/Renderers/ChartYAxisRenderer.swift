@@ -187,55 +187,38 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
       
       let currentRightPoint = transformer.getValueByTouchPoint(CGPoint(x: viewPortHandler.contentRight, y: viewPortHandler.contentBottom))
       
-      let entryNumber = Int(ceil(currentRightPoint.x)) + 2
-      
+      let entryNumber = Int(floor(currentRightPoint.x))
+
       var pt = CGPoint()
       
-      pt.x = currentRightPoint.x
       for i in 0...dataSets.count - 1 {
 
         let set = dataSets[i]
         
         guard let setLabel = set.label else { continue }
         
-        guard let entry = set.entryForIndex(min(entryNumber, set.entryCount - 1)) else { continue }
+        guard let entry = set.entryForIndex(entryNumber) else { continue }
+        
         pt.x = 0
+       
         
-        
-        if i == dataSets.count - 1 {
-          if entry.value < 0 {
-            pt.y = CGFloat(entry.value) * 1.5
-          } else {
-            pt.y = CGFloat(entry.value) / 4 - 30000
-          }
-        
-        } else {
+        if i == dataSets.count - 1 { pt.y = CGFloat(entry.value) / 2
+        }
+        else
+        {
           
           let previousSet = dataSets[i + 1]
           
-          guard let previousEntry = previousSet.entryForIndex(min(entryNumber, set.entryCount - 1)) else { continue }
+          guard let previousEntry = previousSet.entryForIndex(entryNumber) else { continue }
           
-          pt.y = (CGFloat(entry.value) + CGFloat(previousEntry.value)) / 2
-          
-          switch i {
-          case 0: pt.y -= 10000
-          case 1: pt.y -= 15000
-          case 2: pt.y -= 20000
-          case 3: break
-          case 4: pt.y -= 20000
-
-          case 5, 6, 7, 8: pt.y -= 40000
-
-          default: break
-            
-          }
-          
+          let previousEntryValue = max(0, CGFloat(previousEntry.value))
+          pt.y = (CGFloat(entry.value) + previousEntryValue) / 2
         }
 
         pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
         pt.x = fixedPosition
       
-        //pt.y += yAxis.yOffset
+        pt.y += offset
 
         ChartUtils.drawText(context: context, text: setLabel, point: pt, align: textAlign, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor])
       }
@@ -371,11 +354,12 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
             
             pt.x = 0
             pt.y = CGFloat(yAxis.entries[i])
+
             pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
             
             pt.x = fixedPosition
             pt.y += offset
-            
+
             ChartUtils.drawText(context: context, text: text, point: pt, align: textAlign, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor])
         }
     }
