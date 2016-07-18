@@ -191,6 +191,8 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
 
       var pt = CGPoint()
       
+      var prevoiusYCoord: CGFloat = 0
+      
       for i in 0...dataSets.count - 1 {
 
         let set = dataSets[i]
@@ -200,10 +202,8 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
         guard let entry = set.entryForIndex(entryNumber) else { continue }
         
         pt.x = 0
-       
         
-        if i == dataSets.count - 1 { pt.y = CGFloat(entry.value) / 2
-        }
+        if i == dataSets.count - 1 { pt.y = CGFloat(entry.value) / 2 }
         else
         {
           
@@ -220,6 +220,10 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
       
         pt.y += offset
 
+        if abs(prevoiusYCoord - pt.y) < 10 { pt.y += 2 }
+        
+        prevoiusYCoord = pt.y
+        
         ChartUtils.drawText(context: context, text: setLabel, point: pt, align: textAlign, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor])
       }
     }
